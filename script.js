@@ -1,70 +1,32 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const questions = [
-        { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4" },
-        { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Rome"], answer: "Paris" },
-        { question: "What is the largest planet?", options: ["Earth", "Mars", "Jupiter", "Saturn"], answer: "Jupiter" },
-        { question: "Who wrote 'Hamlet'?", options: ["Shakespeare", "Hemingway", "Austen", "Dickens"], answer: "Shakespeare" },
-        { question: "What is the boiling point of water?", options: ["90°C", "100°C", "110°C", "120°C"], answer: "100°C" }
-    ];
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
 
-    const questionsContainer = document.getElementById("questions");
-    const submitButton = document.getElementById("submit");
-    const scoreDisplay = document.getElementById("score");
+#quiz-container {
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
 
-    // Load saved score from localStorage
-    const storedScore = localStorage.getItem("score");
-    if (storedScore !== null) {
-        scoreDisplay.textContent = `Your last score was ${storedScore} out of 5.`;
-    }
+.question {
+    margin: 10px 0;
+}
 
-    // Load saved progress from sessionStorage
-    const savedProgress = JSON.parse(sessionStorage.getItem("progress")) || {};
+button {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
 
-    // Generate quiz questions
-    questions.forEach((q, index) => {
-        const questionDiv = document.createElement("div");
-        questionDiv.innerHTML = `<p><strong>${q.question}</strong></p>`;
-
-        q.options.forEach(option => {
-            const label = document.createElement("label");
-            const radio = document.createElement("input");
-            radio.type = "radio";
-            radio.name = `question${index}`;
-            radio.value = option;
-
-            // Restore previous selections
-            if (savedProgress[`question${index}`] === option) {
-                radio.checked = true;
-            }
-
-            radio.addEventListener("change", () => {
-                savedProgress[`question${index}`] = option;
-                sessionStorage.setItem("progress", JSON.stringify(savedProgress));
-            });
-
-            label.appendChild(radio);
-            label.appendChild(document.createTextNode(` ${option}`));
-            questionDiv.appendChild(label);
-            questionDiv.appendChild(document.createElement("br")); // Add line break for readability
-        });
-
-        questionsContainer.appendChild(questionDiv);
-    });
-
-    // Submit quiz and calculate score
-    submitButton.addEventListener("click", () => {
-        let score = 0;
-        questions.forEach((q, index) => {
-            const selectedOption = document.querySelector(`input[name='question${index}']:checked`);
-            if (selectedOption && selectedOption.value === q.answer) {
-                score++;
-            }
-        });
-
-        scoreDisplay.textContent = `Your score is ${score} out of 5.`;
-        localStorage.setItem("score", score);
-
-        // Clear session storage to reset progress after submission
-        sessionStorage.removeItem("progress");
-    });
-});
+#score {
+    margin-top: 10px;
+    font-weight: bold;
+}
