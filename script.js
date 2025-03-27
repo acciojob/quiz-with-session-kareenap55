@@ -12,8 +12,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const scoreDisplay = document.getElementById("score");
 
     // Load saved score from localStorage
-    if (localStorage.getItem("score")) {
-        scoreDisplay.textContent = `Your score is ${localStorage.getItem("score")} out of 5.`;
+    const storedScore = localStorage.getItem("score");
+    if (storedScore !== null) {
+        scoreDisplay.textContent = `Your last score was ${storedScore} out of 5.`;
     }
 
     // Load saved progress from sessionStorage
@@ -22,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Generate quiz questions
     questions.forEach((q, index) => {
         const questionDiv = document.createElement("div");
-        questionDiv.innerHTML = `<p>${q.question}</p>`;
+        questionDiv.innerHTML = `<p><strong>${q.question}</strong></p>`;
 
         q.options.forEach(option => {
             const label = document.createElement("label");
@@ -30,17 +31,23 @@ document.addEventListener("DOMContentLoaded", function () {
             radio.type = "radio";
             radio.name = `question${index}`;
             radio.value = option;
+
+            // Restore previous selections
             if (savedProgress[`question${index}`] === option) {
                 radio.checked = true;
             }
+
             radio.addEventListener("change", () => {
                 savedProgress[`question${index}`] = option;
                 sessionStorage.setItem("progress", JSON.stringify(savedProgress));
             });
+
             label.appendChild(radio);
-            label.appendChild(document.createTextNode(option));
+            label.appendChild(document.createTextNode(` ${option}`));
             questionDiv.appendChild(label);
+            questionDiv.appendChild(document.createElement("br")); // Add line break for readability
         });
+
         questionsContainer.appendChild(questionDiv);
     });
 
@@ -53,7 +60,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 score++;
             }
         });
+
         scoreDisplay.textContent = `Your score is ${score} out of 5.`;
         localStorage.setItem("score", score);
+
+        // Clear session storage to reset progress after submission
+        sessionStorage.removeItem("progress");
     });
 });
