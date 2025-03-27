@@ -1,7 +1,3 @@
-//your JS code here.
-
-// Do not change code below this line
-// This code will just display the questions to the screen
 document.addEventListener("DOMContentLoaded", function () {
     const questions = [
         { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4" },
